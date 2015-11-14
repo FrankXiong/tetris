@@ -3,6 +3,10 @@ package Multiplayer;
 import java.io.*;
 import java.net.*;
 
+/**
+ * @author:xiongxianren
+ * @description:服务器端类
+ */
 public class Server extends MultiplayerConnection implements Runnable
 {
 	private MultiplayerController mpc;
@@ -28,13 +32,13 @@ public class Server extends MultiplayerConnection implements Runnable
 			}
 			catch(IOException e)
 			{
-				mpc.log("Error writing data to output stream");
+				mpc.log("Error：writing data to output stream");
 				closeAll();
 			}
 		}
 		else
 		{
-			mpc.log("Error writing to \"out\"");
+			mpc.log("Error：writing to \"out\"");
 		}
 	}
 	
@@ -42,12 +46,13 @@ public class Server extends MultiplayerConnection implements Runnable
 	{
 		try
 		{
+	
 			server = new ServerSocket(port, 5);
 			mpc.log("Created ServerSocket");
 		}
 		catch(IOException e)
 		{
-			mpc.log("Error creating ServerSocket");
+			mpc.log("Error：Creating ServerSocket");
 			closeAll();
 			return;
 		}
@@ -55,30 +60,30 @@ public class Server extends MultiplayerConnection implements Runnable
 		try
 		{
 			mpc.log("Listening for connection...");
+			//	创建socket连接			
 			client = server.accept();
 			mpc.log("Connected, creating streams...");
-			//order of creation of the streams is important, RTFM
+			//输入流中读取对象类数据
 			out = new ObjectOutputStream(client.getOutputStream());
+			//将对象类型的数据写入到底层输入流
 			in = new ObjectInputStream(client.getInputStream());
 			mpc.log("Streams created");
 		}
 		catch(SocketException e)
 		{
-			mpc.log("ServerSocket closed manually");
+			mpc.log("Error：ServerSocket closed manually");
 			closeAll();
 			return;
 		}
 		catch(IOException e)
 		{
-			mpc.log("Error listening for connections");
+			mpc.log("Error：Listening for connections");
 			closeAll();
 			return;
 		}
 	
 		Object o;
-		
-		mpc.log("Good to go!");
-		
+		//发送数据		
 		try
 		{
 			while((o = in.readObject()) != null)
@@ -96,15 +101,19 @@ public class Server extends MultiplayerConnection implements Runnable
 			mpc.log("cleaned up: thread terminating");
 		}
 	}
-	
+	//关闭连接	
 	public void closeAll()
 	{
 		try
 		{
-			if(client != null) 	client.close();
-			if(server != null) 	server.close();
-			if(in != null) 		in.close();
-			if(out != null) 	out.close();
+			if(client != null) 	
+				client.close();
+			if(server != null) 	
+				server.close();
+			if(in != null) 		
+				in.close();
+			if(out != null) 	
+				out.close();
 			mpc.cleanUp();
 		}
 		catch(IOException e){}

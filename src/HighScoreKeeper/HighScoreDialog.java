@@ -3,6 +3,10 @@ package HighScoreKeeper;
 import java.awt.*;
 import javax.swing.*;
 
+/**
+ * @author:xiongxianren
+ * @description:高分榜界面实现
+ */
 public class HighScoreDialog extends JDialog
 {
 	private static final long serialVersionUID = -2736054641339427970L;

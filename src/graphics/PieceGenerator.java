@@ -4,6 +4,10 @@ import java.awt.Color;
 import java.util.Random;
 import java.util.Stack;
 
+/**
+ * @author:xiongxianren
+ * @description:颜色配置类
+ */
 public class PieceGenerator
 {
 	private final static int numberOfPieces = 7;
@@ -81,6 +85,7 @@ public class PieceGenerator
 		return BCS_GRAY;
 	}
 	
+	//随机生成方块
 	public static TetrisShape getRandomPiece()
 	{
 		TetrisShape s = null;

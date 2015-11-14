@@ -3,6 +3,10 @@ package Multiplayer;
 import java.io.*;
 import java.net.*;
 
+/**
+ * @author:xiongxianren
+ * @description:客户端类
+ */
 public class Client extends MultiplayerConnection implements Runnable
 {
 	private MultiplayerController mpc;
@@ -29,13 +33,13 @@ public class Client extends MultiplayerConnection implements Runnable
 			}
 			catch(IOException e)
 			{
-				mpc.log("Error writing data to output stream");
+				mpc.log("Error: writing data to output stream");
 				closeAll();
 			}
 		}
 		else
 		{
-			mpc.log("Error writing to \"out\"");
+			mpc.log("Error: writing to \"out\"");
 		}
 	}
 
@@ -47,7 +51,7 @@ public class Client extends MultiplayerConnection implements Runnable
 			client = new Socket(addy, port);
 
 			mpc.log("Connected, creating streams...");
-			//order of creation of the streams is important, RTFM
+			
 			out = new ObjectOutputStream(client.getOutputStream());
 			in = new ObjectInputStream(client.getInputStream());
 			mpc.log("Streams created");
@@ -60,46 +64,16 @@ public class Client extends MultiplayerConnection implements Runnable
 		}
 		catch(IOException e)
 		{
-			mpc.log("Error connecting to server");
+			mpc.log("Error: Can not connect to server");
 			closeAll();
 			return;
 		}
 		
 		Object o;
-		
-		/*
+		//发送数据		
 		try
 		{
-			mpc.log("Waiting for ranking information...");
-			boolean rankRequest = in.readBoolean();
-			
-			switch(JOptionPane.showConfirmDialog(null, "These games will " + (rankRequest ? "" : "not") + " be ranked, do you agree?"))
-			{
-				case JOptionPane.OK_OPTION:
-				{
-					mpc.setRanked(rankRequest);
-					mpc.log("Sending confirmation...");
-					out.writeBoolean(true);
-					break;
-				}
-				case JOptionPane.NO_OPTION:
-				case JOptionPane.CANCEL_OPTION:
-				{
-					closeAll();
-					return;
-				}
-			}
-		}
-		catch(IOException e)
-		{
-			System.out.println(e.getMessage());
-		}
-		*/
-		
-		mpc.log("Good to go!");
-		
-		try
-		{
+			//从ObjectInputStream中读取对象			
 			while((o = in.readObject()) != null)
 			{
 				mpc.processData(o);
@@ -120,9 +94,12 @@ public class Client extends MultiplayerConnection implements Runnable
 	{
 		try
 		{
-			if(client != null)	client.close();
-			if(in != null)		in.close();
-			if(out != null)		out.close();
+			if(client != null)	
+				client.close();
+			if(in != null)		
+				in.close();
+			if(out != null)		
+				out.close();
 			
 			mpc.cleanUp();
 		}

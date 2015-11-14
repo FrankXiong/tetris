@@ -3,11 +3,15 @@ package HighScoreKeeper;
 import javax.swing.table.*;
 import java.util.ArrayList;
 
+/**
+ * @author:xiongxianren
+ * @description:分数排行表
+ */
 public class TetrisTableModel extends AbstractTableModel
 {
 	private static final long serialVersionUID = -5713741427415389345L;
 	
-	private String [] columnNames = {"Player Name", "Level", "Score", "Lines", "Date"};
+	private String [] columnNames = {"玩家", "难度", "分数", "日期"};
 	private Object [][] data = null;
 	
 	public TetrisTableModel(ArrayList<Score> list)
@@ -19,8 +23,7 @@ public class TetrisTableModel extends AbstractTableModel
 			data[i][0] = list.get(i).getPlayerName();
 			data[i][1] = list.get(i).getLevel();
 			data[i][2] = list.get(i).getScore();
-			data[i][3] = list.get(i).getLines();
-			data[i][4] = list.get(i).getDate();
+			data[i][3] = list.get(i).getDate();
 		}
 	}
 	

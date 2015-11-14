@@ -2,10 +2,15 @@ package graphics;
 
 import java.awt.Graphics;
 
+/**
+ * @author:xiongxianren
+ * @description:形状I
+ */
 public class I extends TetrisShape
 {
 	private int i_, j_;
 	public BlockColorScheme cs_;
+	//标识当前形状	
 	private int state = 0;
 
 	public I(int i, int j, BlockColorScheme cs)
@@ -19,6 +24,7 @@ public class I extends TetrisShape
 	{
 		switch(this.state)
 		{
+			// |	
 			case 0:
 			{
 				Drawer.drawTakenBlock(g, i_, j_, cs_);
@@ -28,6 +34,7 @@ public class I extends TetrisShape
 				
 				break;
 			}
+			// ——			
 			case 1:
 			{
 				Drawer.drawTakenBlock(g, i_, j_, cs_);
@@ -66,6 +73,7 @@ public class I extends TetrisShape
 		{
 			case 0:
 			{
+				//先判断当前状态能否进行变换形状				
 				if(		j_ + 2 <= 19 &&
 						j_ - 1 >= 0 &&
 						!grid[i_][j_ - 1].taken &&
@@ -78,6 +86,7 @@ public class I extends TetrisShape
 			}
 			case 1:
 			{
+				//先判断当前状态能否进行变换形状
 				if(		i_ - 1 >= 0 &&
 						i_ + 2 <= 9 &&
 						!grid[i_ - 1][j_].taken &&
@@ -97,7 +106,6 @@ public class I extends TetrisShape
 		{
 			case 0:
 			{
-				//laying down
 				if(		j_ + 1 <= 19 &&
 						!grid[i_ - 1][j_ + 1].taken &&
 						!grid[i_][j_ + 1].taken &&
@@ -110,7 +118,6 @@ public class I extends TetrisShape
 			}
 			case 1:
 			{
-				//standing up
 				if(		j_ + 3 <= 19 &&
 						!grid[i_][j_ + 3].taken)
 				{
@@ -128,7 +135,6 @@ public class I extends TetrisShape
 		{
 			case 0:
 			{
-				//laying down
 				if(		i_ - 2 >= 0 &&
 						!grid[i_ - 2][j_].taken)
 				{
@@ -138,7 +144,6 @@ public class I extends TetrisShape
 			}
 			case 1:
 			{
-				//standing up
 				if(		i_ - 1 >= 0 &&
 						!grid[i_ - 1][j_ - 1].taken &&
 						!grid[i_ - 1][j_].taken &&
@@ -168,7 +173,6 @@ public class I extends TetrisShape
 			}
 			case 1:
 			{
-				//standing up
 				if(		i_ + 1 <= 9 &&
 						!grid[i_ + 1][j_ - 1].taken &&
 						!grid[i_ + 1][j_].taken &&
@@ -248,58 +252,6 @@ public class I extends TetrisShape
 				grid[i_][j_].taken 		||
 				grid[i_ + 1][j_].taken 	||
 				grid[i_ + 2][j_].taken;
-	}
-
-	public void drawExoSkeleton(Block[][] grid, Graphics g)
-	{
-		int k;
-		
-		switch(state)
-		{
-			case 0:
-			{
-				k = j_ + 1;
-				
-				while(	k < 20 &&
-						!grid[i_][k].taken &&
-						!grid[i_ - 1][k].taken &&
-						!grid[i_ + 1][k].taken &&
-						!grid[i_ + 2][k].taken)
-				{
-					++k;
-				}
-				
-				if((k - 1) - j_ >= 1)
-				{
-					Drawer.drawExo(g, i_, k - 1, cs_.getMainColor());
-					Drawer.drawExo(g, i_ - 1, k - 1, cs_.getMainColor());
-					Drawer.drawExo(g, i_ + 1, k - 1, cs_.getMainColor());
-					Drawer.drawExo(g, i_ + 2, k - 1, cs_.getMainColor());
-				}
-				
-				break;
-			}
-			case 1:
-			{
-				k = j_ + 3;
-				
-				while(	k < 20 &&
-						!grid[i_][k].taken)
-				{
-					++k;
-				}
-				
-				if(k - 4 > j_ + 2)
-				{
-					Drawer.drawExo(g, i_, k - 1, cs_.getMainColor());
-					Drawer.drawExo(g, i_, k - 2, cs_.getMainColor());
-					Drawer.drawExo(g, i_, k - 3, cs_.getMainColor());
-					Drawer.drawExo(g, i_, k - 4, cs_.getMainColor());
-				}
-				
-				break;
-			}
-		}
 	}
 	
 }

@@ -15,10 +15,8 @@ public class Tetris implements ActionListener, ItemListener
 {
 	private JFrame frame;
 	private mainWindow mw;
-	private String version = "v.98 - sizing (+/- keys)";
-	private String applicationName = "Tetris/Battle Tetris Clone";
-	private JCheckBoxMenuItem exoItem; 
-	private JCheckBoxMenuItem blindItem;
+	private String version = "v-1.0";
+	private String applicationName = "俄罗斯方块大战";
 
 	public Tetris()
 	{
@@ -40,7 +38,6 @@ public class Tetris implements ActionListener, ItemListener
 	{
 		try
 		{
-			//UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		}
 		catch(ClassNotFoundException e)
@@ -60,7 +57,7 @@ public class Tetris implements ActionListener, ItemListener
 			e.printStackTrace();
 		}
 		
-		frame = new JFrame(applicationName + " " + version);
+		frame = new JFrame(applicationName);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationByPlatform(true);
 		
@@ -69,16 +66,16 @@ public class Tetris implements ActionListener, ItemListener
 		this.mw = new mainWindow(this);
 		
 		JMenuBar menuBar = new JMenuBar();
-		JMenu gameMenu = new JMenu("Game");
-		JMenu newGameMenu = new JMenu("New Game");
-		JMenu battleTetrisMenu = new JMenu("Battle Tetris");
-		JMenu helpMenu = new JMenu("Help");
+		JMenu gameMenu = new JMenu("开始");
+		JMenu newGameMenu = new JMenu("新游戏");
+		JMenu battleTetrisMenu = new JMenu("联网对战");
+		JMenu helpMenu = new JMenu("帮助");
 		
-		JMenuItem listenItem = new JMenuItem("Listen for opponent");
-		listenItem.addActionListener(mw);
-		listenItem.setActionCommand("listen");
+//		JMenuItem listenItem = new JMenuItem("Listen for opponent");
+//		listenItem.addActionListener(mw);
+//		listenItem.setActionCommand("listen");
 		
-		JMenuItem connectItem = new JMenuItem("Connect to opponent");
+		JMenuItem connectItem = new JMenuItem("连接到对方玩家");
 		connectItem.addActionListener(mw);
 		connectItem.setActionCommand("connect");
 		
@@ -86,87 +83,50 @@ public class Tetris implements ActionListener, ItemListener
 		readyItem.addActionListener(mw);
 		readyItem.setActionCommand("ready");
 		
-		battleTetrisMenu.add(listenItem);
+//		battleTetrisMenu.add(listenItem);
 		battleTetrisMenu.add(connectItem);
 		battleTetrisMenu.addSeparator();
 		battleTetrisMenu.add(readyItem);
 		
-		JMenuItem level0 = new JMenuItem("Level 0");
+		JMenuItem level0 = new JMenuItem("平民级");
 		level0.addActionListener(mw);
-		level0.setActionCommand("level 0");
-		JMenuItem level1 = new JMenuItem("Level 1");
+		level0.setActionCommand("level 2");
+		JMenuItem level1 = new JMenuItem("冒险级");
 		level1.addActionListener(mw);
-		level1.setActionCommand("level 1");
-		JMenuItem level2 = new JMenuItem("Level 2");
+		level1.setActionCommand("level 4");
+		JMenuItem level2 = new JMenuItem("勇士级");
 		level2.addActionListener(mw);
-		level2.setActionCommand("level 2");
-		JMenuItem level3 = new JMenuItem("Level 3");
+		level2.setActionCommand("level 6");
+		JMenuItem level3 = new JMenuItem("王者级");
 		level3.addActionListener(mw);
-		level3.setActionCommand("level 3");
-		JMenuItem level4 = new JMenuItem("Level 4");
+		level3.setActionCommand("level 8");
+		JMenuItem level4 = new JMenuItem("英雄级");
 		level4.addActionListener(mw);
-		level4.setActionCommand("level 4");
-		JMenuItem level5 = new JMenuItem("Level 5");
-		level5.addActionListener(mw);
-		level5.setActionCommand("level 5");
-		JMenuItem level6 = new JMenuItem("Level 6");
-		level6.addActionListener(mw);
-		level6.setActionCommand("level 6");
-		JMenuItem level7 = new JMenuItem("Level 7");
-		level7.addActionListener(mw);
-		level7.setActionCommand("level 7");
-		JMenuItem level8 = new JMenuItem("Level 8");
-		level8.addActionListener(mw);
-		level8.setActionCommand("level 8");
-		JMenuItem level9 = new JMenuItem("Level 9");
-		level9.addActionListener(mw);
-		level9.setActionCommand("level 9");
-		JMenuItem level10 = new JMenuItem("Level 10");
-		level10.addActionListener(mw);
-		level10.setActionCommand("level 10");
+		level4.setActionCommand("level 10");
 		
 		newGameMenu.add(level0);
 		newGameMenu.add(level1);
 		newGameMenu.add(level2);
 		newGameMenu.add(level3);
 		newGameMenu.add(level4);
-		newGameMenu.add(level5);
-		newGameMenu.add(level6);
-		newGameMenu.add(level7);
-		newGameMenu.add(level8);
-		newGameMenu.add(level9);
-		newGameMenu.add(level10);
 		
-		JMenuItem highScoreItem = new JMenuItem("High Scores");
+		JMenuItem highScoreItem = new JMenuItem("高分榜");
 		highScoreItem.setActionCommand("scores");
 		highScoreItem.addActionListener(this);
 		
-		JMenuItem exitMenuItem = new JMenuItem("Exit");
+		JMenuItem exitMenuItem = new JMenuItem("退出");
 		exitMenuItem.setActionCommand("exit");
 		exitMenuItem.addActionListener(this);
 		
-		JMenuItem aboutItem = new JMenuItem("About");
+		JMenuItem aboutItem = new JMenuItem("使用说明");
 		aboutItem.addActionListener(this);
 		aboutItem.setActionCommand("about");
-		
-		blindItem = new JCheckBoxMenuItem("Play Blind");
-		blindItem.setSelected(false);
-		blindItem.addItemListener(this);
-		
-		
-		exoItem = new JCheckBoxMenuItem("Draw Exoskeleton");
-		exoItem.setSelected(true);
-		exoItem.addItemListener(this);
-		exoItem.doClick();
 		
 		helpMenu.add(aboutItem);
 		
 		gameMenu.add(newGameMenu);
 		gameMenu.add(battleTetrisMenu);
 		gameMenu.add(highScoreItem);
-		gameMenu.addSeparator();
-		gameMenu.add(exoItem);
-		gameMenu.add(blindItem);
 		gameMenu.addSeparator();
 		gameMenu.add(exitMenuItem);
 
@@ -186,30 +146,24 @@ public class Tetris implements ActionListener, ItemListener
 	{
 		if(e.getActionCommand().equals("exit"))
 		{
+			//释放屏幕资源			
 			frame.dispose();
 			System.exit(0);
 		}
 		else if(e.getActionCommand().equals("about"))
 		{
-			String info = 	"Arrow Keys: piece movement\n" +
-							"Spacebar: drop\n" +
-							"\n" +
-							"Multiplayer:\n" +
-							"TCP/IP, simple listen & connect\n" +
-							"You clear 2 lines: your opponent receives 1 row of blocks with a single gap.\n" +
-							"You clear 3 lines: your opponent receives 2 rows of blocks with a single gap.\n" +
-							"You clear 4 lines: your opponent receives 4 rows of blocks with a single gap.\n" +
-							"\n" +
-							"User Interface:\n" +
-							"Use the + or - keys to change the window size." +
-							"\n\n" +
-							"Written by Kerry Famularo\n" + 
-							"kfamularo@gmail.com";
-			JOptionPane.showMessageDialog(this.mw, info, "Help : About", JOptionPane.INFORMATION_MESSAGE);
+			String info = 	"版本:" +version+"\n\n"
+							+"改变方块形状:arrow up\n"
+							+"左右移动:arrow left,arrow right\n"
+							+"下落一格:arrow down\n"
+							+"直线下落:space\n"
+							+"暂停：p"
+							;
+			JOptionPane.showMessageDialog(this.mw, info, "使用说明", JOptionPane.INFORMATION_MESSAGE);
 		}
 		else if(e.getActionCommand().equals("scores"))
 		{
-			HighScoreDialog ad = new HighScoreDialog(this.frame, "High Scores", true);
+			HighScoreDialog ad = new HighScoreDialog(this.frame, "高分榜", true);
 			ad.setLocation(frame.getLocation().x, frame.getLocation().y + 127);
 			ad.setVisible(true);
 		}
@@ -218,23 +172,7 @@ public class Tetris implements ActionListener, ItemListener
 	public void itemStateChanged(ItemEvent e)
 	{
 		Object selected = e.getItemSelectable();
-
 		boolean change = (e.getStateChange() == ItemEvent.SELECTED ? true : false);
-		
-		if(selected == this.exoItem && exoItem.isEnabled())
-		{	
-			mw.setDrawExoskeleton(change);
-		}
-		
-		if(selected == this.blindItem)
-		{
-			if(!exoItem.getState())
-				exoItem.doClick();
-			
-			exoItem.setEnabled(!change);
-
-			mw.setDrawBlind(change);
-		}
 	}
 	
 	public void setWindowSize(Dimension windowSize)
@@ -247,7 +185,6 @@ public class Tetris implements ActionListener, ItemListener
 	public static void main(String[] args)
 	{
 		Tetris t = new Tetris();
-		
 		t.play();
 	}
 }

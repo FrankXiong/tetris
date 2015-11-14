@@ -5,6 +5,11 @@ import java.util.Iterator;
 import java.util.Collections;
 import java.io.*;
 
+
+/**
+ * @author:xiongxianren
+ * @description:保存游戏数据
+ */
 public class Keeper
 {
 	private static File scoreFile = new File("scores.dat");
@@ -16,7 +21,7 @@ public class Keeper
 		
 		if(list != null)
 		{
-			if(list.size() < 10)
+			if(list.size() < 5)
 			{
 				list.add(s);
 				isHighScore = true;
@@ -42,6 +47,7 @@ public class Keeper
 		return isHighScore;
 	}
 	
+	//创建list存储分数	
 	public static ArrayList<Score> readScores()
 	{
 		ArrayList<Score> list = new ArrayList<Score>();
@@ -92,9 +98,7 @@ public class Keeper
 		return list;
 	}
 	
-	/*
-	 * only writes the top 10 scores
-	 */
+	//只显示Top5分数	
 	private static void writeScores(ArrayList<Score> list)
 	{
 		FileOutputStream fs = null;
@@ -111,10 +115,10 @@ public class Keeper
 			
 			fs = new FileOutputStream(scoreFile);
 			out = new ObjectOutputStream(fs);
-			
+			//按照分数排序			
 			Collections.sort(list, Collections.reverseOrder());
 			
-			for(int i = 0; i < list.size() && i < 10; i++)
+			for(int i = 0; i < list.size() && i < 5; i++)
 			{
 				out.writeObject(list.get(i));
 			}

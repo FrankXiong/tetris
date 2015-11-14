@@ -17,6 +17,10 @@ import java.util.Observer;
 import java.util.LinkedList;
 import java.util.Date;
 
+/**
+ * @author:xiongxianren
+ * @description:主窗口
+ */
 public class mainWindow extends JComponent implements KeyListener, ActionListener, Observer
 {
 	private static final long serialVersionUID = -6726155958015311167L;
@@ -25,17 +29,19 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 	
 	private boolean 		gameOver = true;
 	private boolean 		paused = false;
+	//设置锁	
 	private boolean 		locked = false;
-	private boolean			drawExoskeleton = true;
-	private boolean			drawBlind = false;
+	//初始化下落时间为500	
 	private int 			tickCount = 500;
+	//增加一级难度，下落时间减少40	
 	private final int 		levelShave = 40;
+	//临时存储消除的行数	
 	private int 			tempLines = 0;
+	//二维数组用于保存界面所有方块	
 	private Block [][] 		grid;
 	
 	private Score			gameInformation;
 	
-	private boolean 		debug = false;
 	private Timer 			t;
 	private TetrisShape [] 	piece = null;
 	
@@ -81,11 +87,6 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 	{
 		this.locked = locked;
 	}
-	
-	public void setDrawExoskeleton(boolean draw)
-	{
-		this.drawExoskeleton = draw;
-	}
 
 	protected void paintComponent(Graphics g)
 	{
@@ -96,13 +97,8 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 		this.drawActive(g);
 		this.drawScoring(g);
 		this.drawGameOver(g);
-
-		if(debug)
-		{
-			this.drawDebug(g);
-		}
 	}
-
+	//绘制主区域边缘及背景
 	private void drawMainBoard(Graphics g)
 	{
 		g.setColor(Color.black);
@@ -114,7 +110,7 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 		g.fillRect(Drawer.offset_x + Drawer.boardWidth, Drawer.offset_y, Drawer.borderWidth, Drawer.boardHeight);
 		g.fillRect(Drawer.offset_x - Drawer.borderWidth, Drawer.offset_y + Drawer.boardHeight, Drawer.boardWidth + (Drawer.borderWidth * 2), Drawer.borderWidth);
 	}
-
+	//绘制下一个方块区域边缘及背景
 	private void drawNextBoard(Graphics g)
 	{
 		g.setColor(Color.black);
@@ -150,15 +146,12 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 		}
 	}
 
-	/*
-	 * returns true if tick count has changed
-	 */
 	private boolean checkRow()
 	{
 		setLock(true);
 		
 		boolean tickChanged = false;
-		
+		//存储被消除的行数		
 		ArrayList<Integer> rowList = new ArrayList<Integer>();
 		
 		for(int k = 19; k >= 0; k--)
@@ -192,17 +185,16 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 			
 			switch(rowList.size())
 			{
-				case 1: { multiplier = 40; 		break; 	}
+				case 1: { multiplier = 40; 	break; 	}
 				case 2: { multiplier = 100; 	break; 	}
 				case 3: { multiplier = 300; 	break; 	}
 				case 4: { multiplier = 1200;	break; 	}
 			}
 			
 			gameInformation.setScore(gameInformation.getScore() + ((gameInformation.getLevel() + 1) * multiplier));
-			gameInformation.setLines(gameInformation.getLines() + rowList.size());
 			
 			tempLines += rowList.size();
-			
+			//消除行数超过10行，游戏难度+1			
 			if(!mpc.isGameActive() && tempLines >= 10 && gameInformation.getLevel() < 10)
 			{
 				tempLines = 0;
@@ -296,7 +288,7 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 			}
 		}
 	}
-	
+	//消除行时的动画	
 	private void drawRowAnimation(Graphics g, int col)
 	{
 		try
@@ -328,7 +320,6 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 					{ 
 						low = j; 
 					}
-					
 					Drawer.drawTakenBlock(g, i, j, grid[i][j].cs_);
 				}
 			}
@@ -345,26 +336,17 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 	{
 		if(piece != null)
 		{
-			if(!drawBlind)
-			{
-				piece[ACTIVE].draw(g);
-			}
-			
+			piece[ACTIVE].draw(g);
 			piece[NEXT].drawNext(g);
-			
-			if(drawExoskeleton)
-			{
-				piece[ACTIVE].drawExoSkeleton(grid, g);
-			}
 		}
 	}
 	
 	private void drawScoring(Graphics g)
 	{
 		g.setColor(Color.BLACK);
-		g.drawString("level: " + gameInformation.getLevel(), Drawer.next_offset_x, 280);
-		g.drawString("lines: " + gameInformation.getLines(), Drawer.next_offset_x, 300);
-		g.drawString("score: " + gameInformation.getScore(), Drawer.next_offset_x, 320);
+		g.drawString("难度系数: " + gameInformation.getLevel(), Drawer.next_offset_x, 280);
+		g.drawString("分数: " + gameInformation.getScore(), Drawer.next_offset_x, 310);
+		g.drawString("对手分数: " + gameInformation.getScore(), Drawer.next_offset_x, 340);
 	}
 	
 	private void drawGameOver(Graphics g)
@@ -375,18 +357,8 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 			g.fillRect(Drawer.offset_x + 10, Drawer.offset_y + 175, 180, 50);
 			
 			g.setColor(Color.BLACK);
-			g.drawString("G A M E  O V E R", Drawer.offset_x + 50, Drawer.offset_y + 200);
+			g.drawString("G A M E  O V E R", Drawer.offset_x + 50, Drawer.offset_y + 205);
 		}
-	}
-	
-	private void drawDebug(Graphics g)
-	{
-		g.setColor(Color.WHITE);
-
-		for(int i = 0; i < 10; i++)
-			for(int j = 0; j < 20; j++)
-				if(grid[i][j].taken)
-					g.drawString("T", Drawer.offset_x + (i * 20) + 7, Drawer.offset_y + (j * 20) + 15);
 	}
 	
 	private void newGame(int chosen_level)
@@ -400,7 +372,6 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 		gameInformation = new Score();
 		
 		gameInformation.setLevel(chosen_level);
-		gameInformation.setLines(0);
 		gameInformation.setScore(0);
 		
 		tickCount 			= 500 - (chosen_level * levelShave);
@@ -422,16 +393,9 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 		startTimer();
 	}
 
+//	判断键盘输入
 	public void keyPressed(KeyEvent e)
 	{
-		boolean isShiftDown = ((e.getModifiersEx() & KeyEvent.SHIFT_DOWN_MASK) == KeyEvent.SHIFT_DOWN_MASK) ? true : false;
-		
-		if(isShiftDown)
-		{	
-			int delta = (e.getKeyCode() == KeyEvent.VK_EQUALS ? 1 : (e.getKeyCode() == KeyEvent.VK_MINUS ? -1 : 0));
-			tetris.setWindowSize(Drawer.recalculate(Drawer.blockSize + delta));
-			repaint();
-		}
 		
 		if(!gameOver && !isLocked())
 		{
@@ -455,7 +419,7 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 					case KeyEvent.VK_UP:
 					{
 						piece[ACTIVE].nextState(grid);
-
+						//重绘页面				
 						repaint();
 		
 						break;
@@ -493,6 +457,7 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 		
 						break;
 					}
+					//直线下落					
 					case KeyEvent.VK_SPACE:
 					{
 						setLock(true);
@@ -507,17 +472,14 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 						repaint();
 						
 						setLock(false);
+						//下落完成后重启计时器线程						
 						startTimer();
 						
 						break;
 					}
-					case KeyEvent.VK_D:
-					{
-						debug = !debug;
-						break;
-					}
-				} //switch
-			} //else if
+					
+				} 
+			} 
 		}
 		else
 		{
@@ -537,7 +499,7 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 	{
 		return;
 	}
-	
+	//终止计时器线程	
 	private void cancelTimer()
 	{
 		if(t != null)
@@ -545,10 +507,10 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 			t.cancel();
 		}
 	}
-	
+	//启动计时器线程	
 	private void startTimer()
 	{
-		cancelTimer(); //protect against duplicate* timers
+		cancelTimer(); 
 		
 		System.out.println("timer starting with tickCount: " + tickCount);
 		t = new Timer();
@@ -605,11 +567,12 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 		}
 	}
 	
+	//记录游戏结果	
 	private void recordScore()
 	{
 		String inputResult;
 		
-		inputResult = JOptionPane.showInputDialog(this, "Player Name:", "(default)");
+		inputResult = JOptionPane.showInputDialog(this, "玩家姓名:", "(未命名)");
 		
 		if(inputResult != null)
 		{
@@ -618,7 +581,7 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 			
 			if(Keeper.addScore(gameInformation))
 			{
-				JOptionPane.showMessageDialog(this, "You have a new high score!", "New High Score", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(this, "你刷新了新的得分记录!", "新的高分", JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
 	}
@@ -627,6 +590,7 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 	{
 		if(e.getActionCommand().startsWith("level") && !mpc.isConnected())
 		{
+			//StringTokenizer用于字符串分隔解析，第二个参数为分隔符		
 			StringTokenizer st = new StringTokenizer(e.getActionCommand(), " ");
 			
 			if(st.hasMoreTokens())
@@ -638,38 +602,39 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 				}
 			}
 		}
-		else if(e.getActionCommand().equals("listen"))
-		{
-			if(!mpc.isLocked())
-			{
-				String inputResult = JOptionPane.showInputDialog(this, "Port [1024, 65535]:", "5555");
-				
-				if(inputResult != null)
-				{
-					int port = 0;
-					
-					try
-					{
-						port = Integer.parseInt(inputResult);
-					}
-					catch(NumberFormatException e1)
-					{
-						JOptionPane.showMessageDialog(this, "Invalid port.");
-					}
-					
-					if(mpc.startServer(port))
-						mpc.addObserver(this);
-				}
-			}
-		}
+//		else if(e.getActionCommand().equals("listen"))
+//		{
+//			if(!mpc.isLocked())
+//			{
+//				String inputResult = JOptionPane.showInputDialog(this, "端口 [1024, 65535]:", "5555");
+//				
+//				if(inputResult != null)
+//				{
+//					int port = 0;
+//					
+//					try
+//					{
+//						port = Integer.parseInt(inputResult);
+//					}
+//					catch(NumberFormatException e1)
+//					{
+//						JOptionPane.showMessageDialog(this, "端口不正确");
+//					}
+//					
+//					if(mpc.startServer(port))
+//						mpc.addObserver(this);
+//				}
+//			}
+//		}
 		else if(e.getActionCommand().equals("connect"))
 		{
 			if(!mpc.isLocked())
 			{
-				String inputResult = JOptionPane.showInputDialog(this, "<address>:<port>", "localhost:5555");
+				String inputResult = JOptionPane.showInputDialog(this, "<IP地址>:<端口>", "localhost:5555");
 				
 				if(inputResult != null)
 				{
+								
 					StringTokenizer st = new StringTokenizer(inputResult, ":");
 					
 					String address = null;
@@ -685,17 +650,18 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 						}
 						catch(NumberFormatException e1)
 						{
-							JOptionPane.showMessageDialog(this, "Invalid port.");
+							JOptionPane.showMessageDialog(this, "端口不正确");
 							return;
 						}
 					}
 					else
 					{
-						JOptionPane.showMessageDialog(this, "Invalid format.");
+						JOptionPane.showMessageDialog(this, "格式不正确");
 						return;
 					}
 					
 					if(mpc.startClient(address, port))
+						//添加观察者						
 						mpc.addObserver(this);
 				}
 			}
@@ -714,14 +680,14 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 			
 			if(mpc.isOpponentReady())
 			{
-				mpc.log("starting game...");
+				mpc.log("开始游戏...");
 				mpc.setGameActive(true);
 				this.newGame(0);
 			}
 			else
 			{
 				mpc.setLocalReady(true);
-				mpc.log("ready, waiting for opponent...");
+				mpc.log("等待对方玩家...");
 			}
 		}	
 	}
@@ -738,13 +704,13 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 				
 				if(mpc.isLocalReady())
 				{
-					mpc.log("starting game...");
+					mpc.log("开始游戏...");
 					mpc.setGameActive(true);
 					this.newGame(0);
 				}
 				else
 				{
-					mpc.log("opponent ready, waiting...");
+					mpc.log("等待对方玩家...");
 				}
 			}
 			else if(tp.getMessage().equals("win"))
@@ -782,6 +748,7 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 		}
 	}
 	
+//	输出游戏结果
 	private void processOutcome(boolean win)
 	{
 		this.gameOver = true;
@@ -799,17 +766,7 @@ public class mainWindow extends JComponent implements KeyListener, ActionListene
 		else
 			mpc.addLoss();
 		
-		mpc.log("you " + (win ? "win" : "lose") + "!");
-		mpc.log("score: " + mpc.getWins() + ":" + mpc.getLosses());
-	}
-
-	public boolean isDrawBlind()
-	{
-		return drawBlind;
-	}
-
-	public void setDrawBlind(boolean drawBlind)
-	{
-		this.drawBlind = drawBlind;
+		mpc.log("你 " + (win ? "赢" : "输") + "了!");
+		mpc.log("比分: " + mpc.getWins() + ":" + mpc.getLosses());
 	}
 }

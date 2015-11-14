@@ -22,7 +22,7 @@ public class MultiplayerWindow implements ActionListener
 	
 	public void makeInterface()
 	{
-		frame = new JFrame("Tetris Multiplayer Window");
+		frame = new JFrame("俄罗斯方块多人对战");
 		
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.setResizable(false);

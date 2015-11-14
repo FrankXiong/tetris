@@ -2,6 +2,10 @@ package graphics;
 
 import java.awt.Graphics;
 
+/**
+ * @author:xiongxianren
+ * @description:形状T
+ */
 public class T extends TetrisShape
 {
 	private int i_, j_;
@@ -356,99 +360,5 @@ public class T extends TetrisShape
 				grid[i_ - 1][j_].taken 	||
 				grid[i_ + 1][j_].taken 	||
 				grid[i_][j_ + 1].taken;
-	}
-
-	public void drawExoSkeleton(Block[][] grid, Graphics g)
-	{
-		int k;
-		
-		switch(state)
-		{
-			case 0:
-			{
-				k = j_ + 2;
-				
-				while(	k < 20 &&
-						!grid[i_][k].taken &&
-						!grid[i_ - 1][k - 1].taken &&
-						!grid[i_ + 1][k - 1].taken)
-				{
-					++k;
-				}
-				
-				if((k - 2) - j_ >= 2)
-				{
-					Drawer.drawExo(g, i_, k - 1, cs_.getMainColor());
-					Drawer.drawExo(g, i_, k - 2, cs_.getMainColor());
-					Drawer.drawExo(g, i_ - 1, k - 2, cs_.getMainColor());
-					Drawer.drawExo(g, i_ + 1, k - 2, cs_.getMainColor());
-				}
-				
-				break;
-			}
-			case 1:
-			{
-				k = j_ + 2;
-				
-				while(	k < 20 &&
-						!grid[i_][k].taken &&
-						!grid[i_ - 1][k - 1].taken)
-				{
-					++k;
-				}
-				
-				if((k - 2) - j_ >= 3)
-				{
-					Drawer.drawExo(g, i_, k - 1, cs_.getMainColor());
-					Drawer.drawExo(g, i_, k - 2, cs_.getMainColor());
-					Drawer.drawExo(g, i_, k - 3, cs_.getMainColor());
-					Drawer.drawExo(g, i_ - 1, k - 2, cs_.getMainColor());
-				}
-				
-				break;
-			}
-			case 2:
-			{
-				k = j_ + 1;
-				
-				while(	k < 20 &&
-						!grid[i_][k].taken &&
-						!grid[i_ - 1][k].taken &&
-						!grid[i_ + 1][k].taken)
-				{
-					++k;
-				}
-				
-				if((k - 1) - j_ >= 2)
-				{
-					Drawer.drawExo(g, i_, k - 1, cs_.getMainColor());
-					Drawer.drawExo(g, i_ - 1, k - 1, cs_.getMainColor());
-					Drawer.drawExo(g, i_ + 1, k - 1, cs_.getMainColor());
-					Drawer.drawExo(g, i_, k - 2, cs_.getMainColor());
-				}
-				
-				break;
-			}
-			case 3:
-			{
-				k = j_ + 2;
-				
-				while(	k < 20 &&
-						!grid[i_][k].taken &&
-						!grid[i_ + 1][k - 1].taken)
-				{
-					++k;
-				}
-				
-				if((k - 2) - j_ >= 3)
-				{
-					Drawer.drawExo(g, i_, k - 1, cs_.getMainColor());
-					Drawer.drawExo(g, i_, k - 2, cs_.getMainColor());
-					Drawer.drawExo(g, i_, k - 3, cs_.getMainColor());
-					Drawer.drawExo(g, i_ + 1, k - 2, cs_.getMainColor());
-				}
-				break;
-			}
-		}
 	}
 }
